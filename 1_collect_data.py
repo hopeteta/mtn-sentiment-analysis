@@ -1,4 +1,3 @@
-# Phase 1: Collecting MTN Rwanda App Reviews from Google Play Store
 
 from google_play_scraper import reviews, Sort
 import pandas as pd
@@ -7,7 +6,6 @@ print("Starting to collect MTN Rwanda reviews...")
 
 all_reviews = []
 
-# Collect in multiple languages to get more reviews
 languages = ['en', 'fr']  # English and French
 
 for lang in languages:
