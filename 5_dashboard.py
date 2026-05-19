@@ -87,7 +87,7 @@ def fetch_live_reviews():
 
 
 def dashboard():
-    # Header
+    
     col1, col2 = st.columns([3, 1])
     with col1:
         st.title(" MTN Rwanda - Customer Sentiment Analysis")
@@ -173,7 +173,7 @@ def dashboard():
         st.markdown("**Overall Sentiment Distribution**")
         sentiment_counts = filtered_df['sentiment'].value_counts()
         fig, ax = plt.subplots(figsize=(6, 6))
-        colors = ['#2ecc71', "#798e8f", '#e74c3c']
+        colors = ['#798e8f', "#2ecc71", '#e74c3c']
         ax.pie(
             sentiment_counts,
             labels=sentiment_counts.index,

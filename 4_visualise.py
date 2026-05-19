@@ -115,5 +115,5 @@ plt.savefig('data/chart5_sentiment_over_time.png', bbox_inches='tight')
 plt.close()
 print("Chart 5 saved!")
 
-print("\n✅ All 5 charts saved in the data folder!")
+print("\n All 5 charts saved in the data folder!")
 print("Open the data folder in VS Code to view them.")

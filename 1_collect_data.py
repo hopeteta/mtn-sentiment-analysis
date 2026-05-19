@@ -15,27 +15,27 @@ for lang in languages:
         lang=lang,
         country='rw',
         sort=Sort.NEWEST,
-        count=500        # 500 per language
+        count=500        
     )
     all_reviews.extend(result)
     print(f"Got {len(result)} reviews in {lang}")
 
-# Convert to table
+
 df = pd.DataFrame(all_reviews)
 
-# Keep only the columns we need
+
 df = df[['userName', 'content', 'score', 'at']]
 
-# Rename columns
+
 df.columns = ['username', 'review', 'rating', 'date']
 
-# Remove duplicates
+
 df = df.drop_duplicates(subset=['review'])
 
-# Remove empty reviews
+
 df = df.dropna(subset=['review'])
 
-# Save to CSV
+
 df.to_csv('data/mtn_reviews.csv', index=False)
 
 print(f"Done! Total reviews collected: {len(df)}")
