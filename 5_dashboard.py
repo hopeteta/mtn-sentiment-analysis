@@ -15,8 +15,8 @@ st.set_page_config(
     layout="wide"
 )
 
-ADMIN_USERNAME = "mtn_admin"
-ADMIN_PASSWORD = "mtn2024"
+ADMIN_USERNAME = "hopeteta"
+ADMIN_PASSWORD = "mtn2026"
 
 def login_page():
     col1, col2, col3 = st.columns([1, 2, 1])
