@@ -22,7 +22,7 @@ def login_page():
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
         st.markdown("<br><br>", unsafe_allow_html=True)
-        st.image("https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/MTN_Logo.svg/320px-MTN_Logo.svg.png", width=150)
+    
         st.title("MTN Rwanda")
         st.subheader("Sentiment Analysis System")
         st.markdown("---")
