@@ -6,8 +6,15 @@
             "type": "debugpy",
             "request": "launch",
             "module": "streamlit",
-            "args": ["run", "5_dashboard.py"],
-            "justMyCode": true
+            "args": [
+                "run",
+                "5_dashboard.py",
+                "--server.headless=false"
+            ],
+            "justMyCode": true,
+            "env": {
+                "BROWSER": "auto"
+            }
         }
     ]
 }
