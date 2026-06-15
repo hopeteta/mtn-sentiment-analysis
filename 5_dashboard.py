@@ -91,7 +91,7 @@ def dashboard():
     col1, col2 = st.columns([3, 1])
     with col1:
         st.title(" MTN Rwanda - Customer Sentiment Analysis")
-        st.markdown("Final Year Project | AI-Based Sentiment Analysis | MTN Rwanda Case Study")
+        st.markdown(" AI-Based Sentiment Analytics System")
     with col2:
         st.markdown("<br>", unsafe_allow_html=True)
         if st.button(" Logout"):
