@@ -1,6 +1,8 @@
 
 
-
+from fpdf import FPDF
+import tempfile
+import os
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -85,6 +87,64 @@ def fetch_live_reviews():
         df_live['confidence_score'] = scores
         return df_live
 
+def generate_pdf_report(df):
+    pdf = FPDF()
+    pdf.add_page()
+
+    pdf.set_font("Helvetica", "B", 16)
+    pdf.cell(0, 10, "MTN Rwanda - Sentiment Analysis Report", ln=True, align="C")
+    pdf.set_font("Helvetica", "", 10)
+    pdf.cell(0, 8, f"Total Reviews Analysed: {len(df)}", ln=True, align="C")
+    pdf.ln(5)
+
+    pos = len(df[df['sentiment'] == 'positive'])
+    neu = len(df[df['sentiment'] == 'neutral'])
+    neg = len(df[df['sentiment'] == 'negative'])
+
+    pdf.set_font("Helvetica", "B", 12)
+    pdf.cell(0, 8, "Summary", ln=True)
+    pdf.set_font("Helvetica", "", 11)
+    pdf.cell(0, 7, f"Positive: {pos} ({round(pos/len(df)*100,1) if len(df)>0 else 0}%)", ln=True)
+    pdf.cell(0, 7, f"Neutral: {neu} ({round(neu/len(df)*100,1) if len(df)>0 else 0}%)", ln=True)
+    pdf.cell(0, 7, f"Negative: {neg} ({round(neg/len(df)*100,1) if len(df)>0 else 0}%)", ln=True)
+    pdf.ln(5)
+
+    sentiment_counts = df['sentiment'].value_counts()
+    colors_map = {'positive': '#2ecc71', 'negative': '#e74c3c', 'neutral': '#95a5a6'}
+    colors = [colors_map[s] for s in sentiment_counts.index]
+
+    fig, ax = plt.subplots(figsize=(5, 5))
+    ax.pie(sentiment_counts, labels=sentiment_counts.index, autopct='%1.1f%%', colors=colors, startangle=140)
+    ax.set_title("Sentiment Distribution")
+
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".png") as tmpfile:
+        fig.savefig(tmpfile.name, bbox_inches='tight')
+        chart_path = tmpfile.name
+    plt.close(fig)
+
+    pdf.image(chart_path, x=55, w=100)
+    os.unlink(chart_path)
+    pdf.ln(5)
+
+    pdf.set_font("Helvetica", "B", 12)
+    pdf.cell(0, 8, "Review Details", ln=True)
+    pdf.set_font("Helvetica", "B", 9)
+    pdf.cell(110, 7, "Review", border=1)
+    pdf.cell(40, 7, "Sentiment", border=1)
+    pdf.cell(30, 7, "Rating", border=1, ln=True)
+
+    pdf.set_font("Helvetica", "", 8)
+    for _, row in df.head(100).iterrows():
+        review_text = str(row['review'])[:60]
+        pdf.cell(110, 6, review_text, border=1)
+        pdf.cell(40, 6, str(row['sentiment']), border=1)
+        pdf.cell(30, 6, str(row['rating']), border=1, ln=True)
+
+    return bytes(pdf.output())
+
+
+def convert_to_csv(df):
+    return df.to_csv(index=False).encode('utf-8')
 
 def dashboard():
     
@@ -165,7 +225,28 @@ def dashboard():
 
     st.divider()
 
-   
+   st.subheader("📄 Export Report")
+    col1, col2 = st.columns(2)
+    with col1:
+        pdf_bytes = generate_pdf_report(filtered_df)
+        st.download_button(
+            label="📥 Download PDF Report",
+            data=pdf_bytes,
+            file_name="mtn_sentiment_report.pdf",
+            mime="application/pdf",
+            use_container_width=True
+        )
+    with col2:
+        csv_bytes = convert_to_csv(filtered_df)
+        st.download_button(
+            label="📊 Download as CSV (Excel)",
+            data=csv_bytes,
+            file_name="mtn_sentiment_data.csv",
+            mime="text/csv",
+            use_container_width=True
+        )
+    st.divider()
+
     st.subheader(" Sentiment Charts")
     col1, col2 = st.columns(2)
 

@@ -5,3 +5,4 @@ textblob
 streamlit
 google-play-scraper
 nltk
+fpdf2
