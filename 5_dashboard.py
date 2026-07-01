@@ -230,7 +230,7 @@ def dashboard():
     with col1:
         pdf_bytes = generate_pdf_report(filtered_df)
         st.download_button(
-            label="📥 Download PDF Report",
+            label=" Download PDF Report",
             data=pdf_bytes,
             file_name="mtn_sentiment_report.pdf",
             mime="application/pdf",
@@ -239,7 +239,7 @@ def dashboard():
     with col2:
         csv_bytes = convert_to_csv(filtered_df)
         st.download_button(
-            label="📊 Download as CSV (Excel)",
+            label=" Download Excel Report",
             data=csv_bytes,
             file_name="mtn_sentiment_data.csv",
             mime="text/csv",
