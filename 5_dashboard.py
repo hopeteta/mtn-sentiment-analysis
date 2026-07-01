@@ -135,7 +135,7 @@ def generate_pdf_report(df):
 
     pdf.set_font("Helvetica", "", 8)
     for _, row in df.head(100).iterrows():
-        review_text = str(row['review'])[:60]
+        review_text = str(row['review'])[:60].encode('latin-1', 'replace').decode('latin-1')
         pdf.cell(110, 6, review_text, border=1)
         pdf.cell(40, 6, str(row['sentiment']), border=1)
         pdf.cell(30, 6, str(row['rating']), border=1, ln=True)
@@ -225,7 +225,7 @@ def dashboard():
 
     st.divider()
 
-   st.subheader("📄 Export Report")
+    st.subheader(" Export Report")
     col1, col2 = st.columns(2)
     with col1:
         pdf_bytes = generate_pdf_report(filtered_df)
