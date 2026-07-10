@@ -17,9 +17,10 @@ st.set_page_config(
     layout="wide"
 )
 
-ADMIN_USERNAME = "hopeteta"
-ADMIN_PASSWORD = "mtn2026"
-
+USERS = {
+    "mtn_admin": {"password": "mtn2026", "role": "admin"},
+    "mtn_analyst": {"password": "analyst2026", "role": "analyst"}
+}
 def login_page():
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
@@ -32,8 +33,10 @@ def login_page():
         username = st.text_input("Username", placeholder="Enter your username")
         password = st.text_input("Password", type="password", placeholder="Enter your password")
         if st.button("Login", use_container_width=True):
-            if username == ADMIN_USERNAME and password == ADMIN_PASSWORD:
+            if username in USERS and USERS[username]["password"] == password:
                 st.session_state['logged_in'] = True
+                st.session_state['role'] = USERS[username]["role"]
+                st.session_state['username'] = username
                 st.rerun()
             else:
                 st.error(" Wrong username or password. Please try again.")
@@ -154,8 +157,11 @@ def dashboard():
         st.markdown(" AI-Based Sentiment Analytics System")
     with col2:
         st.markdown("<br>", unsafe_allow_html=True)
+        st.markdown(f"👤 Logged in as: **{st.session_state.get('username', '')}** ({st.session_state.get('role', '')})")
         if st.button(" Logout"):
             st.session_state['logged_in'] = False
+            st.session_state['role'] = None
+            st.session_state['username'] = None
             st.rerun()
 
     st.divider()
@@ -165,7 +171,8 @@ def dashboard():
     st.subheader("Live Review Analysis")
     st.markdown("Click the button below to fetch and analyse the latest MTN Rwanda reviews in real time.")
 
-    if st.button("Refresh & Fetch Latest Reviews", use_container_width=True):
+    if st.session_state.get('role') == 'admin':
+        if st.button(" Refresh & Fetch Latest Reviews", use_container_width=True):
         df_live = fetch_live_reviews()
         if df_live is not None:
             st.success(f" Fetched and analysed {len(df_live)} latest reviews!")
