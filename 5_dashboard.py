@@ -30,6 +30,11 @@ st.markdown("""
 <style>
     .stApp {
         background-color: #1a1a1a;
+        background-image: url("https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1920&q=80");
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        background-blend-mode: overlay;
         font-family: 'Segoe UI', sans-serif;
     }
     section[data-testid="stSidebar"] {
@@ -183,11 +188,11 @@ def login_page():
 
         st.markdown("<br>", unsafe_allow_html=True)
 
-        tab1, tab2 = st.tabs(["🔐 Login", "📝 Create Account"])
+        tab1, tab2 = st.tabs([" Login", " Create Account"])
 
         with tab1:
-            username = st.text_input("👤 Username", placeholder="Enter your username", key="login_user")
-            password = st.text_input("🔒 Password", type="password", placeholder="Enter your password", key="login_pass")
+            username = st.text_input(" Username", placeholder="Enter your username", key="login_user")
+            password = st.text_input(" Password", type="password", placeholder="Enter your password", key="login_pass")
             st.markdown("<br>", unsafe_allow_html=True)
             if st.button("Login →", use_container_width=True, key="login_btn"):
                 users = load_users()
@@ -198,38 +203,38 @@ def login_page():
                     st.session_state['display'] = users[username]["display"]
                     st.rerun()
                 else:
-                    st.error("❌ Wrong username or password. Please try again.")
+                    st.error(" Wrong username or password. Please try again.")
 
         with tab2:
             st.markdown("<small style='color:#aaa;'>Create an analyst account to access live reviews and sentiment testing.</small>", unsafe_allow_html=True)
-            new_username = st.text_input("👤 Username", placeholder="Letters only (e.g. johnmtn)", key="reg_user")
-            new_email = st.text_input("📧 Email Address", placeholder="e.g. john@mtn.com", key="reg_email")
-            new_password = st.text_input("🔒 Password", type="password", placeholder="Create a password", key="reg_pass")
-            confirm_password = st.text_input("🔒 Confirm Password", type="password", placeholder="Repeat your password", key="reg_confirm")
+            new_username = st.text_input(" Username", placeholder="Username (e.g. johnmtn)", key="reg_user")
+            new_email = st.text_input(" Email Address", placeholder="e.g. john@mtn.com", key="reg_email")
+            new_password = st.text_input(" Password", type="password", placeholder="Create a password", key="reg_pass")
+            confirm_password = st.text_input(" Confirm Password", type="password", placeholder="Repeat your password", key="reg_confirm")
             st.markdown("<br>", unsafe_allow_html=True)
 
             if st.button("Create Account →", use_container_width=True, key="reg_btn"):
                 if not new_username:
-                    st.error("❌ Please enter a username.")
+                    st.error(" Please enter a username.")
                 elif not re.match("^[a-zA-Z]+$", new_username):
-                    st.error("❌ Username must contain letters only. No numbers or special characters.")
+                    st.error(" Username must contain letters only. No numbers or special characters.")
                 elif len(new_username) < 3:
-                    st.error("❌ Username must be at least 3 characters long.")
+                    st.error(" Username must be at least 3 characters long.")
                 elif not new_email:
-                    st.error("❌ Please enter your email address.")
+                    st.error(" Please enter your email address.")
                 elif not re.match(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$", new_email):
-                    st.error("❌ Please enter a valid email address.")
+                    st.error(" Please enter a valid email address.")
                 elif not new_password:
-                    st.error("❌ Please enter a password.")
+                    st.error(" Please enter a password.")
                 elif len(new_password) < 6:
-                    st.error("❌ Password must be at least 6 characters.")
+                    st.error(" Password must be at least 6 characters.")
                 elif new_password != confirm_password:
-                    st.error("❌ Passwords do not match.")
+                    st.error(" Passwords do not match.")
                 elif username_exists(new_username):
-                    st.error("❌ Username already exists. Please choose another.")
+                    st.error(" Username already exists. Please choose another.")
                 else:
                     save_analyst(new_username, new_password, new_email)
-                    st.success(f"✅ Account created! You can now login as {new_username}.")
+                    st.success(f" Account created! You can now login as {new_username}.")
 
         st.markdown("<br>", unsafe_allow_html=True)
         st.markdown("<div style='text-align:center; font-size:0.75rem; color:#666;'>MTN Rwanda © 2026 | Final Year Project</div>", unsafe_allow_html=True)
@@ -355,10 +360,10 @@ def convert_to_csv(df):
 # ─────────────────────────────────────────
 def analyst_dashboard():
     with st.sidebar:
-        st.markdown(f"### 👤 {st.session_state.get('display', '')}")
+        st.markdown(f"###  {st.session_state.get('display', '')}")
         st.markdown("**Role:** Analyst")
         st.divider()
-        if st.button("🚪 Logout", use_container_width=True):
+        if st.button(" Logout", use_container_width=True):
             st.session_state['logged_in'] = False
             st.session_state['role'] = None
             st.session_state['username'] = None
@@ -374,13 +379,13 @@ def analyst_dashboard():
 </div>
 """, unsafe_allow_html=True)
 
-    st.markdown("<div class='section-title'>🔄 Live Review Analysis</div>", unsafe_allow_html=True)
+    st.markdown("<div class='section-title'> Live Review Analysis</div>", unsafe_allow_html=True)
     st.markdown("<small>Fetch and analyse the latest MTN Rwanda reviews in real time.</small>", unsafe_allow_html=True)
 
-    if st.button("🔄 Fetch Latest Reviews", use_container_width=True):
+    if st.button(" Fetch Latest Reviews", use_container_width=True):
         df_live = fetch_live_reviews()
         if df_live is not None:
-            st.success(f"✅ Fetched and analysed {len(df_live)} latest reviews!")
+            st.success(f" Fetched and analysed {len(df_live)} latest reviews!")
             col1, col2, col3 = st.columns(3)
             with col1:
                 st.metric("Positive", len(df_live[df_live['sentiment'] == 'positive']))
@@ -392,12 +397,12 @@ def analyst_dashboard():
                 df_live[['username', 'review', 'sentiment', 'rating']],
                 use_container_width=True
             )
-            st.info("ℹ️ These live reviews are not stored permanently.")
+            st.info(" These live reviews are not stored permanently.")
             col1, col2 = st.columns(2)
             with col1:
                 live_pdf = generate_pdf_report(df_live)
                 st.download_button(
-                    "📥 Download PDF",
+                    " Download PDF",
                     data=live_pdf,
                     file_name="live_sentiment_report.pdf",
                     mime="application/pdf",
@@ -419,7 +424,7 @@ def analyst_dashboard():
 
     st.divider()
 
-    st.markdown("<div class='section-title'>🤖 Live Sentiment Tester</div>", unsafe_allow_html=True)
+    st.markdown("<div class='section-title'> Live Sentiment Tester</div>", unsafe_allow_html=True)
     user_input = st.text_area("", placeholder="e.g. MTN network is very slow today...")
     if st.button("Analyse Sentiment →", use_container_width=True):
         if user_input.strip() == "":
@@ -464,7 +469,7 @@ def admin_dashboard():
             default=[1, 2, 3, 4, 5]
         )
         st.divider()
-        if st.button("🚪 Logout", use_container_width=True):
+        if st.button(" Logout", use_container_width=True):
             st.session_state['logged_in'] = False
             st.session_state['role'] = None
             st.session_state['username'] = None
@@ -485,7 +490,7 @@ def admin_dashboard():
 </div>
 """, unsafe_allow_html=True)
 
-    st.markdown("<div class='section-title'>📈 Overview</div>", unsafe_allow_html=True)
+    st.markdown("<div class='section-title'> Overview</div>", unsafe_allow_html=True)
     col1, col2, col3, col4 = st.columns(4)
     with col1:
         st.metric("Total Reviews", len(filtered_df))
@@ -501,12 +506,12 @@ def admin_dashboard():
 
     st.divider()
 
-    st.markdown("<div class='section-title'>📄 Export Report</div>", unsafe_allow_html=True)
+    st.markdown("<div class='section-title'> Export Report</div>", unsafe_allow_html=True)
     col1, col2 = st.columns(2)
     with col1:
         pdf_bytes = generate_pdf_report(filtered_df)
         st.download_button(
-            "📥 Download PDF Report",
+            " Download PDF Report",
             data=pdf_bytes,
             file_name="mtn_sentiment_report.pdf",
             mime="application/pdf",
@@ -515,7 +520,7 @@ def admin_dashboard():
     with col2:
         csv_bytes = convert_to_csv(filtered_df)
         st.download_button(
-            "📊 Download CSV",
+            " Download CSV",
             data=csv_bytes,
             file_name="mtn_sentiment_data.csv",
             mime="text/csv",
@@ -569,7 +574,7 @@ def admin_dashboard():
 
     st.divider()
 
-    st.markdown("<div class='section-title'>📅 Sentiment Trends Over Time</div>", unsafe_allow_html=True)
+    st.markdown("<div class='section-title'> Sentiment Trends Over Time</div>", unsafe_allow_html=True)
     filtered_df['month'] = filtered_df['date'].dt.to_period('M').astype(str)
     monthly = filtered_df.groupby(['month', 'sentiment']).size().unstack(fill_value=0)
     fig, ax = plt.subplots(figsize=(8, 3))
@@ -594,11 +599,11 @@ def admin_dashboard():
 
     st.divider()
 
-    st.markdown("<div class='section-title'>🔄 Live Review Analysis</div>", unsafe_allow_html=True)
-    if st.button("🔄 Fetch Latest Reviews", use_container_width=True):
+    st.markdown("<div class='section-title'> Live Review Analysis</div>", unsafe_allow_html=True)
+    if st.button(" Fetch Latest Reviews", use_container_width=True):
         df_live = fetch_live_reviews()
         if df_live is not None:
-            st.success(f"✅ Fetched and analysed {len(df_live)} latest reviews!")
+            st.success(f" Fetched and analysed {len(df_live)} latest reviews!")
             col1, col2, col3 = st.columns(3)
             with col1:
                 st.metric("Positive", len(df_live[df_live['sentiment'] == 'positive']))
@@ -610,12 +615,12 @@ def admin_dashboard():
                 df_live[['username', 'review', 'sentiment', 'rating']],
                 use_container_width=True
             )
-            st.info("ℹ️ These live reviews are not stored permanently.")
+            st.info(" These live reviews are not stored permanently.")
             col1, col2 = st.columns(2)
             with col1:
                 live_pdf = generate_pdf_report(df_live)
                 st.download_button(
-                    "📥 Download Live PDF",
+                    " Download Live PDF",
                     data=live_pdf,
                     file_name="live_report.pdf",
                     mime="application/pdf",
@@ -637,7 +642,7 @@ def admin_dashboard():
 
     st.divider()
 
-    st.markdown("<div class='section-title'>🤖 Live Sentiment Tester</div>", unsafe_allow_html=True)
+    st.markdown("<div class='section-title'> Live Sentiment Tester</div>", unsafe_allow_html=True)
     user_input = st.text_area("", placeholder="e.g. MTN network is very slow today...")
     if st.button("Analyse Sentiment →", use_container_width=True):
         if user_input.strip() == "":
@@ -662,7 +667,7 @@ def admin_dashboard():
 
     st.divider()
 
-    st.markdown("<div class='section-title'>📋 Historical Reviews Table</div>", unsafe_allow_html=True)
+    st.markdown("<div class='section-title'> Historical Reviews Table</div>", unsafe_allow_html=True)
     st.markdown(f"<small>Showing {len(filtered_df)} reviews</small>", unsafe_allow_html=True)
     st.dataframe(
         filtered_df[['username', 'review', 'sentiment', 'rating', 'date']],
